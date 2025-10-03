@@ -65,7 +65,7 @@ assign bus = (tb_drive_bus) ? tb_val_bus : 'bz;
             MDout = 1;
         @(posedge clk);
             read  = 0;
-        repeat(2) @(posedge clk);
+        repeat(3) @(posedge clk);
             MDout = 0;
         $finish;
     end
