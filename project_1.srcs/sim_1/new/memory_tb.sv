@@ -22,10 +22,10 @@
 module memory_tb;
     localparam   w = 32;
     logic clk,   rst, MDbus, MDout, MAin, Wait, read, write;
-    tri[w-1:0] bus;
+    tri[w-1:0]   bus;
     logic        tb_drive_bus;
     logic[w-1:0] tb_val_bus;
-    
+        
     memory dut(
         .clk(clk),
         .bus(bus),
@@ -40,16 +40,77 @@ module memory_tb;
 
 always #5 clk = ~clk;
 
+clocking cb @(posedge clk);
+    default input #1step output #0;
+    output rst, MDbus, MDout, MAin, read, write;
+    input bus;
+endclocking
+
+default clocking cb;
+
 assign bus = (tb_drive_bus) ? tb_val_bus : 'bz;
 
     initial begin    
-        clk = 0; read = 0; write = 0; Wait = 0;
-        MDbus = 0; MDout = 0; MAin = 0;
-        tb_drive_bus = 0; tb_val_bus = '0;        
-        rst = 1;
+        clk = 0; cb.read <= 0; cb.write <= 0; Wait = 0;
+        cb.MDbus <= 0; cb.MDout <= 0; cb.MAin <= 0;
+        tb_drive_bus = 0; tb_val_bus = '0; rst = 1;
         
-        repeat(2) @(posedge clk);
+        cb.rst <= 1;
+        ##1;
+        cb.rst <= 0;
+        rst = 0;
+        ##1;
+        tb_drive_bus = 1; tb_val_bus = 32'd1;       //write no.1   
+        cb.MAin   <= 1;
+        ##1;
+        tb_val_bus = 32'd8; 
+        cb.MAin   <= 0;            
+        cb.MDbus  <= 1;
+        ##1;
+        cb.write  <= 1;   
+        cb.MDbus  <= 0; 
+        ##1;
+        tb_val_bus = 32'd2;                         //write no.2   
+        cb.MAin   <= 1;
+        ##1;
+        tb_val_bus = 32'd9; 
+        cb.MAin   <= 0;            
+        cb.MDbus  <= 1;
+        ##1;
+        cb.write  <= 1;   
+        cb.MDbus  <= 0;
+        ##1;
+        tb_val_bus = 32'd1;        //read no.1
+        cb.write  <= 0;
+        cb.MAin   <= 1;
+        ##1;
+        cb.read   <= 1;
+        ##1;
+        tb_drive_bus = 0;
+        cb.read   <= 0;
+        cb.MDout  <= 1;
+        cb.MAin   <= 0;
+        ##1;
+        tb_drive_bus = 1; tb_val_bus = 32'd2;        //read no.2     
+        cb.MDout  <= 0;
+        cb.MAin   <= 1;
+        ##1;           
+        cb.read   <= 1;
+        ##1;  
+        tb_drive_bus = 0; 
+        cb.read   <= 0;
+        cb.MAin   <= 0;    
+        cb.MDout  <= 1; 
+        ##1;
+        cb.MDout  <= 0; 
+        $finish;
+    end
+endmodule
+
+
+/*      @(posedge clk);
             rst = 0;
+        @(posedge clk);
             tb_drive_bus = 1; tb_val_bus = 32'd1;          
             MAin  = 1;
         @(posedge clk);
@@ -65,8 +126,5 @@ assign bus = (tb_drive_bus) ? tb_val_bus : 'bz;
             MDout = 1;
         @(posedge clk);
             read  = 0;
-        repeat(3) @(posedge clk);
-            MDout = 0;
-        $finish;
-    end
-endmodule
+        repeat(2) @(posedge clk);
+            MDout = 0;*/
