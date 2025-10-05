@@ -8,6 +8,7 @@ project_1.gen/
 project_1.webtalk/
 project_1.xpr
 project_1.xpr.lock
+project_1.wcfg
 
 # התעלם מכל קבצי ה-SV וה-V בתוך srcs
 project_1.srcs/**/*.sv

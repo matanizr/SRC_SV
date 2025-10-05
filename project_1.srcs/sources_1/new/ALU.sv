@@ -21,6 +21,71 @@
 
 typedef enum logic [3:0]{
     BtoC = 4'b0000,
+    shr  = 4'b0001,
+    shl  = 4'b0010,
+    shc  = 4'b0011,
+    shra = 4'b0100,
+    Not  = 4'b0101,
+    inc4 = 4'b0110,
+    add  = 4'b0111,
+    sub  = 4'b1000,
+    Or   = 4'b1001,
+    And  = 4'b1010
+} alu_op_t;
+
+module ALU #(parameter int w = 32)(
+    input  logic         clk, rst,
+    input  logic         Ain, Cin, Cout,
+    input  alu_op_t      op,
+    inout[w-1:0]         bus,
+    output logic[w-1:0]  c_check, a_check
+    ); 
+    logic[w-1:0] A, B, C;
+    logic[w-1:0] result;
+    
+    assign B       = bus;
+    assign c_check = C;
+    assign a_check = A;
+    
+    always_ff @(posedge clk) begin
+        if (rst) begin
+            A <= '0;
+            C <= '0; end
+        else begin
+            if (Ain) A <= bus;
+            if (Cin) C <= result; 
+        end
+    end
+    
+    always_comb begin
+        unique case(op)
+            BtoC : result = B;
+            shr  : result = B >> 1;
+            shl  : result = B << 1;
+            shc  : result = {B[w-2:0], B[w-1]};
+            shra : result = $signed(B) >>> 1;
+            Not  : result = ~B;
+            inc4 : result = B + 4;
+            add  : result = A + B;
+            sub  : result = A - B;
+            Or   : result = A | B;
+            And  : result = A & B;
+            default : result = 0;
+        endcase 
+    end
+        
+    assign bus = (Cout) ? C : 'bz;    
+endmodule
+
+
+
+
+
+
+
+/*
+typedef enum logic [3:0]{
+    BtoC = 4'b0000,
     shr = 4'b0001,
     shl = 4'b0010,
     shc  = 4'b0011,
@@ -61,7 +126,7 @@ module ALU_block #(parameter int w = 32)(
             sub_f : op = sub;
             Or_f  : op = Or;
             And_f : op = And;
-            default: /* no-op */ ;
+            default: ;
         endcase
     end
     ALU #(.w(w)) U_ALU(
@@ -112,7 +177,7 @@ module reg_bus_out #(parameter int w = 32)(
     always_ff @(posedge clk) if (in)  Q <= D;       
     
     assign bus = out ? Q : 'bz;
-endmodule
+endmodule*/
 
     
 
