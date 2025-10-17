@@ -34,13 +34,16 @@ module regfile #(
     input logic        Rin, Rout, BAout
     );
     
-    logic [w-1:0] regs[n-1:0];
-    logic [$clog2(n)-1:0] ra, rb, rc;    
-    assign ra = IR[Ra_MSB:Ra_LSB];
+    logic [w-1:0]         regs[n-1:0];
+    logic [$clog2(n)-1:0] ra, rb, rc;   
+    
+    //read the register address from the IR 
+    assign ra = IR[Ra_MSB:Ra_LSB];    
     assign rb = IR[Rb_MSB:Rb_LSB];
     assign rc = IR[Rc_MSB:Rc_LSB];
     
     logic [$clog2(n)-1:0] addr_sel;
+    
     always_comb begin
         addr_sel = '0;
         unique case (1'b1)
@@ -50,20 +53,25 @@ module regfile #(
         endcase
     end
     
-    logic[w-1:0] read_data;
-    localparam logic [$clog2(n)-1:0] R_last = logic'((n-1));
+    logic[w-1:0]                      read_data;
+    localparam logic [$clog2(n)-1:0]  R_last = logic'((n-1)); //the reg that creat a zero
+    
     always_comb begin
     read_data = regs[addr_sel];
         if (BAout && addr_sel == R_last) read_data = '0;        
     end
     
-    assign bus = (Rout || BAout) ? read_data : 'bz;
+    assign bus = (Rout || BAout) ? read_data : 'bz;   //(Rout is not sinchronic but Rin is)
 
     always_ff @(posedge clk) begin 
         if (Rin) regs[addr_sel] <= bus;
     end
 endmodule
     
+
+
+
+
 
 
 
