@@ -1,17 +1,26 @@
 ﻿# Vivado: התעלמות מכל תוצרי הבנייה/סימולציה
-project_1.cache/
-project_1.sim/
-project_1.runs/
-project_1.hw/
-project_1.ip_user_files/
-project_1.gen/
-project_1.webtalk/
+*.cache/
+*.sim/
+*.runs/
+*.hw/
+*.ip_user_files/
+*.gen/
+*.webtalk/
+*.jou
+*.log
+*.str
+*.dcp
+*.pb
+*.wdb
+*.xsa
+*.xpr.lock
+*.wcfg
+
+# קובץ הפרויקט הראשי הישן
 project_1.xpr
-project_1.xpr.lock
-project_1.wcfg
+
+# נתיבים ספציפיים 
 CPU_simple_riscV/utils_1/
-
-
 
 # זבל מערכת
 Thumbs.db
