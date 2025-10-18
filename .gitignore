@@ -10,8 +10,6 @@ project_1.xpr
 project_1.xpr.lock
 project_1.wcfg
 
-# אבל אל תתעלם מהטסטבנץ' הזה (הקובץ היחיד שנרצה במעקב)
-!project_1.srcs/sim_1/new/memory_tb.sv
 
 # זבל מערכת
 Thumbs.db
