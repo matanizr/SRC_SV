@@ -20,9 +20,10 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module IR #(parameter w = 32) (
-    inout logic[w-1:0]  bus,
-    input logic         clk,
-    input logic         c1, c2, IRin, rst
+    inout  logic[w-1:0]  bus,
+    input  logic         clk,
+    input  logic         c1, c2, IRin, IRout, rst,
+    output logic[4:0]    to_control_unit
     );
     logic[w-1:0]        out_bus;
     logic[w-1:0]        inst;
@@ -46,5 +47,8 @@ module IR #(parameter w = 32) (
             default : /*no state been chose*/;
         endcase
     end
+    
+    assign to_control_unit = inst[31:27];
+    
     assign bus = (c1 || c2) ? out_bus : 'bz;      
 endmodule
