@@ -19,7 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module memory_tb;
+module tb_memory;
     localparam   w = 32;
     logic clk,   rst, MDbus, MDout, MAin, Wait, read, write;
     tri[w-1:0]   bus;

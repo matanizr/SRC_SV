@@ -22,10 +22,10 @@
 module      tb_PC;
 
 localparam   w = 32;
-logic        clk, rst;
-logic        PCin, PCout;
+logic        clk = 0, rst = 0;
+logic        PCin = 0, PCout = 0;
 logic[w-1:0] val_bus;
-logic        drive_bus;
+logic        drive_bus = 0;
 tri[w-1:0]   bus;
 
 always #5 clk = ~clk;
@@ -40,29 +40,24 @@ PC_u #(.w(w)) dut (
     .PCout(PCout) );
 
 clocking cb @(posedge clk);
-    output val_bus, drive_bus;    
+    output val_bus, drive_bus, rst, PCin, PCout;    
 endclocking
 
 initial begin
-    clk           = 0;
-    PCin          = 0;
-    PCout         = 0;    
-    cb.val_bus   <='0;
-    cb.drive_bus <= 0;
-    rst           = 1; @(cb);
-    rst           = 0;
+    cb.rst           <= 1; @(cb);
+    cb.rst           <= 0;
     
-    cb.val_bus   <= 32'hF;
     cb.drive_bus <= 1;
-    PCin          = 1; @(cb);
+    cb.val_bus   <= 32'hF;    
+    cb.PCin      <= 1; @(cb);
     cb.drive_bus <= 0;
-    PCin          = 0;
+    cb.PCin      <= 0;
         
     cb.drive_bus <= 1;
     cb.val_bus   <= 32'b0;  
-    PCout     = 1; @(cb);
+    cb.PCout     <= 1; @(cb);
     cb.drive_bus <= 0;
-    PCout     = 0; @(cb);
+    cb.PCout     <= 0; @(cb);
     
     $finish;
 end
