@@ -19,20 +19,17 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module con_u #(
-    parameter w       = 32,
-    parameter con_msb = 2,
-    parameter con_lsb = 0)
-(   inout  logic[w-1:0] bus,
-    input  logic        clk,
+module con_u #(parameter w = 32)(
+    inout  logic[w-1:0] bus,
+    input  logic        clk, rst,
     input  logic[w-1:0] IR,
-    input  logic        con_in, rst,
+    input  logic        con_in,
     output logic        con_out
     );
     logic[2:0]  op_code;
     logic       s_b;
     logic       cond;
-    assign      op_code = IR[con_msb:con_lsb];
+    assign      op_code = IR[2:0];
     assign      s_b     = bus[w-1];
     
     always_comb begin

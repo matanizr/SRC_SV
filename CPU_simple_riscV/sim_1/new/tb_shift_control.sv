@@ -23,7 +23,7 @@ module tb_shift_control;
 
 localparam   w = 32;
 tri[w-1:0]   bus;
-logic        clk = 0, rst;
+logic        clk = 0, clk_tb = 0, rst;
 logic        ld, decr;
 logic        n;
 logic        drive_bus = 0;
@@ -32,9 +32,13 @@ logic[4:0]   tb_shifts;
 
 always #5 clk = ~clk;
 
+always begin
+     #(5-1ps) clk_tb = ~clk_tb;
+     #1ps; end
+
 assign bus = drive_bus ? val_bus : 'bz;
 
-clocking cb @(posedge clk);
+clocking cb @(posedge clk_tb);
     output drive_bus, val_bus, rst, decr, ld;
 endclocking
 
@@ -59,7 +63,7 @@ initial begin
     cb.ld        <= 0;
     cb.drive_bus <= 0;
     
-    cb.decr      <= 1; repeat(6) @(cb); 
+    cb.decr      <= 1; repeat(5) @(cb); 
     $finish;   
 end
 endmodule
