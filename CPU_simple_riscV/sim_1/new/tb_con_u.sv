@@ -22,7 +22,7 @@
 module tb_con_u;
 
 localparam   w = 32;
-logic        rst = 0, clk = 0, clk_tb = 0;
+logic        rst = 0, clk = 1;
 tri[w-1:0]   bus;
 logic        con_in = 0, con_out = 0;
 logic[w-1:0] IR;
@@ -32,13 +32,9 @@ logic        drive_bus = 0;
 
 always #5 clk = ~clk;
 
-always begin
-     #(5-1ps) clk_tb = ~clk_tb;
-     #1ps; end
-
 assign bus = drive_bus ? val_bus : 'bz;
 
-clocking cb @(posedge clk_tb);
+clocking cb @(negedge clk);
     output rst, con_out, IR, val_bus, drive_bus;
 endclocking
 
@@ -51,7 +47,7 @@ con_u #(.w(w)) dut (
     .con_out(con_out) );
     
 initial begin
-    cb.rst       <= 1; @(cb);
+    cb.rst       <= 1; repeat(2) @(cb);
     cb.rst       <= 0;
     con_in       <= 1;
     cb.IR        <= 32'd0; @(cb);

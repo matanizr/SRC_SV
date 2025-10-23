@@ -21,20 +21,20 @@
 
 module tb_alu;
 localparam            w = 32;
-logic                 clk = 0, rst;
+logic                 clk = 1, rst = 0;
 tri[w-1:0]            bus;
 logic[3:0]            op;
-logic                 Ain, Cin, Cout;
+logic                 Ain = 0, Cin = 0, Cout = 0;
 logic signed [w-1:0]  c_check, a_check;    // just for TB
-logic                 tb_drive_bus;
+logic                 tb_drive_bus = 0;
 logic[w-1:0]          tb_val_bus;
-logic                 zero = 0, negative = 0, overflow = 0, carry = 0;
+logic                 zero, negative, overflow, carry;
 
 always #5 clk = ~clk;
 
-clocking cb @(posedge clk);
+clocking cb @(negedge clk);
     default input #1step output #0;
-    output op, Cin, Cout, Ain; 
+    output op, Cin, Cout, Ain, tb_val_bus, tb_drive_bus, rst; 
     input c_check, a_check, bus;
 endclocking
 
@@ -49,74 +49,72 @@ ALU #(.w(w)) dut(
 
 initial begin
     
-    cb.Ain        <=  0;
-    cb.Cin        <=  0;
-    cb.Cout       <=  0;
-    cb.op         <= '0;   
-    tb_drive_bus   =  1;
-    tb_val_bus     = '0;     
-    rst            =  1; repeat(2) @(cb);
-    rst            =  0;
-    
 //////////////////// flag check ////////////////////////////////////////////
+    $display("-------- flags ---------");
+    cb.tb_drive_bus   <=  1; @(cb)
     
     //zero flag
-    tb_val_bus <= 32'b00000000000000000000000000000001;   
-    cb.Ain <= 1'b1; @(cb)
-    cb.Ain <= 1'b0;
-    tb_val_bus <= 32'b00000000000000000000000000000001;   
-    cb.op  <= 4'b1000;
-    cb.Cin <= 1'b1; @(cb)
-    cb.Cin <= 1'b0; @(cb)
+    cb.tb_val_bus <= 32'b00000000000000000000000000000001;   
+    cb.Ain        <= 1'b1; @(cb)
+    cb.Ain        <= 1'b0;
+    cb.tb_val_bus <= 32'b00000000000000000000000000000001;   
+    cb.op         <= 4'b1000;
+    cb.Cin        <= 1'b1; @(cb)
+    cb.Cin        <= 1'b0; @(cb)
     $display("sub : %0d - %0d = %0d", a_check, cb.bus, c_check);   
     
     //negative flag
-    tb_val_bus <= 32'b11111111111111111111111111111111;   
-    cb.Ain <= 1'b1; @(cb)
-    cb.Ain <= 1'b0;
-    tb_val_bus <= 32'b00000000000000000000000000000001;   
-    cb.op  <= 4'b1000;
-    cb.Cin <= 1'b1; @(cb)
-    cb.Cin <= 1'b0; @(cb)
+    cb.tb_val_bus <= 32'b11111111111111111111111111111111;   
+    cb.Ain        <= 1'b1; @(cb)
+    cb.Ain        <= 1'b0;
+    cb.tb_val_bus <= 32'b00000000000000000000000000000001;   
+    cb.op         <= 4'b1000;
+    cb.Cin        <= 1'b1; @(cb)
+    cb.Cin        <= 1'b0; @(cb)
     $display("sub : %0d - %0d = %0d", a_check, cb.bus, c_check);
     
     //carry flag
-    tb_val_bus <= 32'b11111111111111111111111111111111;                        
-    cb.Ain <= 1'b1; @(cb)
-    cb.Ain <= 1'b0;
-    tb_val_bus <= 32'b00000000000000000000000000000010;   
-    cb.op  <= 4'b0111;
-    cb.Cin <= 1'b1; @(cb)
-    cb.Cin <= 1'b0; @(cb)
+    cb.tb_val_bus <= 32'b11111111111111111111111111111111;                        
+    cb.Ain        <= 1'b1; @(cb)
+    cb.Ain        <= 1'b0;
+    cb.tb_val_bus <= 32'b00000000000000000000000000000010;   
+    cb.op         <= 4'b0111;
+    cb.Cin        <= 1'b1; @(cb)
+    cb.Cin        <= 1'b0; @(cb)
     $display("add : %032b + %032b = %032b", a_check, cb.bus, c_check);
     
     //overflow flag
-    tb_val_bus <= 32'b10000000000000000000000000000000;                        
-    cb.Ain <= 1'b1; @(cb)
-    cb.Ain <= 1'b0;
-    tb_val_bus <= 32'b00000000000000000000000000000001;   
-    cb.op  <= 4'b1000;
-    cb.Cin <= 1'b1; @(cb)
-    cb.Cin <= 1'b0; @(cb)
-    $display("sub : %032b - %032b = %032b", a_check, cb.bus, c_check); repeat(2) @(cb);
+    cb.tb_val_bus <= 32'b10000000000000000000000000000000;                        
+    cb.Ain        <= 1'b1; @(cb)
+    cb.Ain        <= 1'b0;
+    cb.tb_val_bus <= 32'b00000000000000000000000000000001;   
+    cb.op         <= 4'b1000;
+    cb.Cin        <= 1'b1; @(cb)
+    cb.Cin        <= 1'b0; @(cb)
+    $display("sub : %032b - %032b = %032b", a_check, cb.bus, c_check); @(cb);
     
 
-//////////////////// Op check ////////////////////////////////////////////    
-    /*  
+//////////////////// Op check //////////////////////////////////////////// 
+    $display("-------- OP ------------");   
+    @(cb);
+    cb.tb_val_bus    <= 32'h80000001;
+    cb.tb_drive_bus  <= 1;
+    cb.Cin           <= 1;
+      
     cb.op <= 4'b0000; @(cb);
-    $display("BtoC : b = %032b ; c = %032b", cb.bus, c_check);
+    $display("BtoC : b = %032b ; c = %032b", bus, c_check);
     cb.op <= 4'b0001; @(cb);
-    $display("shr  : b = %032b ; c = %032b", cb.bus, c_check);
+    $display("shr  : b = %032b ; c = %032b", bus, c_check); 
     cb.op <= 4'b0010; @(cb);
-    $display("shl  : b = %032b ; c = %032b", cb.bus, c_check);
+    $display("shl  : b = %032b ; c = %032b", bus, c_check);
     cb.op <= 4'b0011; @(cb);
-    $display("shc  : b = %032b ; c = %032b", cb.bus, c_check);
+    $display("shc  : b = %032b ; c = %032b", bus, c_check);
     cb.op <= 4'b0100; @(cb);
-    $display("shra : b = %032b ; c = %032b", cb.bus, c_check);
+    $display("shra : b = %032b ; c = %032b", bus, c_check);
     cb.op <= 4'b0101; @(cb);
-    $display("not  : b = %032b ; c = %032b", cb.bus, c_check);
+    $display("not  : b = %032b ; c = %032b", bus, c_check);
     cb.op <= 4'b0110; @(cb);
-    $display("inc4 : b = %0d ; c = %0d", cb.bus, c_check);
+    $display("inc4 : b = %0d ; c = %0d", bus, c_check);
     
     @(cb);
     cb.Cin <= 0;
@@ -127,7 +125,7 @@ initial begin
     cb.tb_val_bus <= 32'd5;   
     cb.op         <= 4'b0111;
     cb.Cin        <= 1; @(cb);    
-    $display("add  : %0d + %0d = %0d"  , a_check, cb.bus, c_check);
+    $display("add  : %0d + %0d = %0d"  , a_check, bus, c_check);
     cb.Cin        <= 0;
     
     cb.tb_val_bus <= 32'd8;
@@ -136,7 +134,7 @@ initial begin
     cb.tb_val_bus <= 32'd5;   
     cb.op         <= 4'b1000; 
     cb.Cin        <= 1; @(cb);
-    $display("sub  : %0d - %0d = %0d"  , a_check, cb.bus, c_check);
+    $display("sub  : %0d - %0d = %0d"  , a_check, bus, c_check);
     cb.Cin        <= 0;
     
     cb.tb_val_bus <= 32'b10000000000000000000000000000001;
@@ -145,7 +143,7 @@ initial begin
     cb.tb_val_bus <= 32'b00000000000000010000000000000000;   
     cb.op         <= 4'b1001;
     cb.Cin        <= 1; @(cb);
-    $display("or   : %032b OR %032b = %032b"  , a_check, cb.bus, c_check);
+    $display("or   : %032b OR %032b = %032b"  , a_check, bus, c_check);
     cb.Cin        <= 0;
     
     cb.tb_val_bus <= 32'b10000000000000000000000000000001;
@@ -154,9 +152,9 @@ initial begin
     cb.tb_val_bus <= 32'b00000000000000010000000000000000;   
     cb.op         <= 4'b1010;
     cb.Cin        <= 1; @(cb);
-    $display("and  : %032b AND %032b = %032b"  , a_check, cb.bus, c_check);
+    $display("and  : %032b AND %032b = %032b"  , a_check, bus, c_check);
     cb.Cin        <= 0;  
-    */
+    
     
     $finish;
 end 

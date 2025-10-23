@@ -22,7 +22,7 @@
 module IR #(parameter w = 32) (
     inout  logic[w-1:0]  bus,
     input  logic         clk,
-    input  logic         c1, c2, IRin, IRout, rst,
+    input  logic         c1, c2, IRin, rst,
     output logic[4:0]    to_control_unit
     );
     logic[w-1:0]        out_bus;
@@ -30,11 +30,10 @@ module IR #(parameter w = 32) (
     
     always_ff @(posedge clk) begin
         if      (rst)  inst <= '0;
-        else if (IRin) inst <= bus;
+        else if (IRin) inst    <= bus;
     end
     
     always_comb begin
-        out_bus = '0;
         unique case (1'b1)
             c1 : begin
                  out_bus[21:0]  = inst[21:0];

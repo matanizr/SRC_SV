@@ -19,10 +19,11 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+
 module      tb_PC;
 
 localparam   w = 32;
-logic        clk = 0, clk_tb = 0, rst = 0;
+logic        clk = 1, rst = 0;
 logic        PCin = 0, PCout = 0;
 logic[w-1:0] val_bus;
 logic        drive_bus = 0;
@@ -38,25 +39,26 @@ PC_u #(.w(w)) dut (
     .bus(bus),
     .PCin(PCin),
     .PCout(PCout) );
-
-clocking cb @(posedge clk);
-    output val_bus, drive_bus, rst, PCin, PCout; 
+    
+clocking cb @(negedge clk);
+    default input #1step output #0; 
+    output rst, PCin, PCout, drive_bus, val_bus; 
 endclocking
 
 initial begin
-    cb.rst       <= 1; @(cb)
+    cb.rst       <= 1; repeat(2) @(cb);
     cb.rst       <= 0;
     
-    cb.val_bus   <= 32'hF;
+    cb.val_bus   <= 'hF;
     cb.drive_bus <= 1;        
     cb.PCin      <= 1; @(cb);
     cb.PCin      <= 0;
 
-    cb.val_bus   <= 32'b0;
+    cb.val_bus   <= 'b0; @(cb);
     
-    cb.PCout     <= 1; @(cb); 
-    cb.PCout     <= 0;
-    cb.drive_bus <= 0; @(cb)
+    cb.drive_bus <= 0;
+    cb.PCout     <= 1; @(cb);
+    cb.PCout     <= 0; @(cb);
     
     $finish;
 end
@@ -84,4 +86,29 @@ initial begin
     cb.drive_bus <= 0;
     ctrl_cb.PCout     <= 1; @(ctrl_cb); 
     
-    $finish;*/
+    $finish;
+*/
+    
+    
+/* work
+clocking cb @(posedge clk);
+    output val_bus, drive_bus, rst, PCin, PCout; 
+endclocking
+
+initial begin
+    cb.rst       <= 1; @(cb)
+    cb.rst       <= 0;
+    
+    cb.val_bus   <= 32'hF;
+    cb.drive_bus <= 1;        
+    cb.PCin      <= 1; @(cb);
+    cb.PCin      <= 0;
+
+    cb.val_bus   <= 32'b0;
+    
+    cb.PCout     <= 1; @(cb); 
+    cb.PCout     <= 0;
+    cb.drive_bus <= 0; @(cb)
+    
+    $finish;
+*/
