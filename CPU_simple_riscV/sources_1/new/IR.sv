@@ -30,19 +30,17 @@ module IR #(parameter w = 32) (
     
     always_ff @(posedge clk) begin
         if      (rst)  inst <= '0;
-        else if (IRin) inst    <= bus;
+        else if (IRin) inst <= bus;
     end
     
     always_comb begin
         unique case (1'b1)
             c1 : begin
                  out_bus[21:0]  = inst[21:0];
-                 out_bus[31:22] = {10{inst[21]}};
-                 end
+                 out_bus[31:22] = {10{inst[21]}}; end
             c2 : begin
                  out_bus[16:0]  = inst[16:0];
-                 out_bus[31:17] = {15{inst[16]}};
-                 end
+                 out_bus[31:17] = {15{inst[16]}}; end
             default : /*no state been chose*/;
         endcase
     end

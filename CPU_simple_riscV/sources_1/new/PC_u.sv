@@ -33,9 +33,8 @@ module PC_u #(parameter w = 32)(
             PCout_q  <= 1'b0; end     
          else begin
             PCout_q           <= PCout;
-            if (PCin) pc_addr <= bus;
-         end 
+            if (PCin) pc_addr <= bus; end          
     end
-    
+        
     assign bus = PCout_q ? pc_addr : 'bz;    
 endmodule
