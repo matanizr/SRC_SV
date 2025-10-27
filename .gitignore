@@ -1,0 +1,31 @@
+﻿# Vivado generated (directories)
+*.cache/
+*.Xil/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.gen/
+*.sim/
+*.webtalk/
+
+# Vivado generated (files)
+*.jou
+*.log
+*.str
+*.dcp
+*.pb
+*.wdb
+*.xsa
+*.wcfg
+*.xpr
+archive_project_summary.txt
+
+# Project-specific (safety net)
+simple_riscV.cache/
+simple_riscV.hw/
+simple_riscV.ip_user_files/
+simple_riscV.sim/
+
+# OS / misc
+Thumbs.db
+Desktop.ini
