@@ -22,7 +22,10 @@
 module PC_u #(parameter w = 32)(
     input logic         clk, rst,
     input logic         PCin, PCout,
-    inout logic[w-1:0]  bus
+    //inout logic[w-1:0]  bus,         //just for tb
+    
+    input  logic[w-1:0]   bus_in,
+    output logic[w-1:0]   bus_out  
     );    
     logic[w-1:0] pc_addr;
     logic        PCout_q;
@@ -33,8 +36,8 @@ module PC_u #(parameter w = 32)(
             PCout_q  <= 1'b0; end     
          else begin
             PCout_q           <= PCout;
-            if (PCin) pc_addr <= bus; end          
+            if (PCin) pc_addr <= bus_in; end          
     end
         
-    assign bus = PCout_q ? pc_addr : 'bz;    
+    assign bus_out = PCout_q ? pc_addr : 'bz;    
 endmodule

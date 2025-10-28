@@ -22,7 +22,6 @@
 
 module tb_control_unit;
 
-import alu_op::*;
 import opCodesPkg::*;
 
 logic clk = 1, rst = 0, Done = 1, strt = 0;
@@ -32,8 +31,8 @@ logic[3:0]  countIn = 3'b0;
 always #5 clk = ~clk;
 
 clocking cb @(posedge clk);
-    default input #1step output #0; 
-    output clk, rst, Done, strt, opCode, countIn; 
+    default input #1step output #0;
+    output clk, rst, Done, strt, opCode, countIn;
 endclocking
 
 control_unit dut (
@@ -46,7 +45,7 @@ initial begin
     cb.rst    <= 0;
     cb.strt   <= 1;                @(cb);
     cb.strt   <= 0;
-    cb.opCode <= ADD;    repeat(9) @(cb);
+    cb.opCode <= SUB;    repeat(9) @(cb);
     cb.opCode <= STOP;   repeat(4) @(cb);          
     $finish;    
 end

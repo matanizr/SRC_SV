@@ -19,19 +19,18 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-import alu_op::*;
+//import alu_op::*;
 import opCodesPkg::*;
 
 module counter  (
     input  logic        enable, load, rst, clk, End,
-    input  logic[3:0]   countIn, 
     output logic[3:0]   count
-    );    
+    );
         
     always_ff @(posedge clk) begin
-        if      (rst || End)  count <= 4'b0000;
-        else if (load)        count <= countIn;
-        else if (enable)      count <= (count == 4'd15) ? 4'd0 : count + 1;
+        if      (rst || End)       count <= 4'b0000;
+        else if (load)             count <= 4'b0110;
+        else if (enable & !load)   count <= (count == 4'd15) ? 4'd0 : count + 1;
     end    
 endmodule
 
@@ -52,31 +51,6 @@ module decoder (
     always_comb begin
         op = '0;
         op[opCode] = 1;
-        /*
-        unique case(opCode)
-            LD   : op[LD]  = 1;
-            LDR  : op[LDR]  = 1;
-            ST   : op[ST]  = 1;
-            STR  : op[STR]  = 1;
-            LA   : op[LA]  = 1;
-            LAR  : op[LAR]  = 1;
-            BR   : op[BR]  = 1;
-            BRL  : op[BRL]  = 1;
-            ADD  : op[ADD] = 1;
-            ADDI : op[13] = 1;
-            SUB  : op[14] = 1;
-            NEG  : op[15] = 1;
-            AND  : op[20] = 1;
-            ANDI : op[21] = 1;
-            OR   : op[22] = 1;
-            ORI  : op[23] = 1;
-            NOT  : op[24] = 1;
-            SHR  : op[26] = 1;
-            SHRA : op[27] = 1;
-            SHL  : op[28] = 1;
-            SHC  : op[29] = 1;
-            STOP : op[31] = 1;
-        endcase */
     end    
 endmodule
 
@@ -85,14 +59,14 @@ module control_signal_encoder (
     input  logic[31:0]  op,
     output logic[36:0]  ctrl_signals
     );
-    logic Gra, Grb, Grc, Rin, Rout, BAout, CtoB, Shr, Shl, Shc, Shra, Not, Inc4, Add, Sub, Or, And, Ain, Cin, Cout;
+    logic Gra, Grb, Grc, Rin, Rout, BAout, BtoC, Shr, Shl, Shc, Shra, Not, Inc4, Add, Sub, Or, And, Ain, Cin, Cout;
     logic CONin, IRin, C1out, C2out, PCin, PCout, MAin, MDout, MDbus, Read, Write, Wait, Ld, Decr, Goto6, Stop;
     logic End;
     
     always_comb begin    
         ////////rst all the ctrl signals/////
         ctrl_signals = '0;
-        Gra=0; Grb=0; Grc=0; Rin=0; Rout=0; BAout=0; CtoB=0; Shr=0; Shl=0; Shc=0; Shra=0; Not=0;
+        Gra=0; Grb=0; Grc=0; Rin=0; Rout=0; BAout=0; BtoC=0; Shr=0; Shl=0; Shc=0; Shra=0; Not=0;
         Inc4=0; Add=0; Sub=0; Or=0; And=0; Ain=0; Cin=0; Cout=0; CONin=0; IRin=0; C1out=0; C2out=0;PCin=0; 
         PCout=0; MAin=0; MDout=0; MDbus=0; Read=0; Write=0; Wait=0; Ld=0; Decr=0; End=0; Goto6=0; Stop=0;
         
@@ -103,17 +77,24 @@ module control_signal_encoder (
             Read  = 1; Cout  = 1; PCin  = 1; end            
         if (T[2]) begin
             MDout  = 1; IRin  = 1; end    
-                                 
+        
+        ///////////////stop////////////////////////////////
+        if (T[3] && op[STOP] == 1) begin
+            Stop = 1; end                        
         ////////////////add////////////////////////////////        
         if (T[3] && op[ADD] == 1) begin
             Grb = 1; Rout = 1; Ain = 1; end
         if (T[4] && op[ADD] == 1) begin
             Grc = 1; Rout = 1; Add = 1; Cin = 1; end                
         if (T[5] && op[ADD] == 1) begin
-            Cout = 1; Gra = 1; Rin = 1; End = 1; end            
-        ///////////////stop////////////////////////////////
-        if (T[3] && op[STOP] == 1) begin
-            Stop = 1; end          
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end
+        ///////////////sub/////////////////////////////////
+        if (T[3] && op[SUB] == 1) begin
+            Grb = 1; Rout = 1; Ain = 1; end
+        if (T[4] && op[SUB] == 1) begin
+            Grc = 1; Rout = 1; Sub = 1; Cin = 1; end                
+        if (T[5] && op[SUB] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end        
         
         
         ////////Generated Control Signals///////////////////
@@ -123,7 +104,7 @@ module control_signal_encoder (
         ctrl_signals[3]  = Rin;
         ctrl_signals[4]  = Rout;
         ctrl_signals[5]  = BAout;
-        ctrl_signals[6]  = CtoB;
+        ctrl_signals[6]  = BtoC;
         ctrl_signals[7]  = Shr;
         ctrl_signals[8]  = Shl;
         ctrl_signals[9]  = Shc;
@@ -159,14 +140,13 @@ endmodule
 
 
 module control_unit(
-    input              clk, rst, Done, strt,  
-    input  logic[3:0]  countIn,
+    input              clk, rst, Done, strt, con, n_is_zero,
     input  logic[4:0]  opCode,    
     output logic[36:0] ctrl_signals
     );
+    logic[3:0]   countIn;
     logic        read, write, Wait;
     logic        Enable, R, W;
-    logic        loadCounter;
     logic[3:0]   count;
     logic[15:0]  T;
     logic[31:0]  op;
@@ -178,7 +158,7 @@ module control_unit(
     );    
     
     counter  ctr(
-        .clk(clk), .rst(rst), .enable(Enable), .load(loadCounter), .countIn(countIn), .count(count), .End(ctrl_signals[34])
+        .clk(clk), .rst(rst), .enable(Enable), .load(ctrl_signals[35]), .countIn(countIn), .count(count), .End(ctrl_signals[34])
     );
     
     control_step_decoder  ctrl_stp_dcdr(

@@ -28,13 +28,16 @@ module regfile #(
     parameter int Rc_MSB = 26, Rc_LSB = 22
     )(
     input logic         clk,
-    inout logic[w-1:0]  bus,
-    input logic[w-1:0]  IR,
+    //inout logic[w-1:0]  bus,              //just to tb
     input logic         Gra, Grb, Grc,
-    input logic         Rin, Rout, BAout
-    //output logic[w-1:0] Ra_check, Rb_check, Rc_check   // just for TB  
+    input logic         Rin, Rout, BAout,
+    //output logic[w-1:0] Ra_check, Rb_check, Rc_check   // just for TB 
+    
+    input  logic[w-1:0]   bus_in,
+    output logic[w-1:0]   bus_out     
     );    
     
+    logic [w-1:0]         IR;
     logic [w-1:0]         regs[n-1:0];
     logic [$clog2(n)-1:0] ra, rb, rc;   
     
@@ -48,7 +51,7 @@ module regfile #(
     logic[w-1:0]  read_data;
     localparam logic [$clog2(n)-1:0]  R_last = logic'((n-1)); //The register that generates zero
     
-    assign bus = (Rout || BAout) ? read_data : 'bz;  
+    assign bus_out = (Rout || BAout) ? read_data : 'bz;  
     
     always_comb begin
         addr_sel = '0;
@@ -65,7 +68,7 @@ module regfile #(
     end
     
     always_ff @(posedge clk) begin 
-        if (Rin) regs[addr_sel] <= bus;
+        if (Rin) regs[addr_sel] <= bus_in;
     end
     
     //assign Ra_check = regs[ra];   // just for TB

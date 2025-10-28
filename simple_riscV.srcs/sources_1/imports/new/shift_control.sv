@@ -21,21 +21,22 @@
 
 
 module shift_control #(parameter w = 32) (
-    inout  logic[w-1:0] bus,
-    input  logic       clk,
-    input  logic       ld, decr, rst,
-    output logic       n,
+    //inout  logic[w-1:0] bus,    // just for tb
+    input  logic          clk, rst,
+    input  logic          ld, decr,
+    output logic          n_is_zero,    
+    //output logic[4:0]     tb_shifts,     // just for tb
     
-    output logic[4:0]  tb_shifts     // just for tb
-    );
-    logic[4:0] shifts;    
+    input  logic[w-1:0]   bus_in
+    );    
+    logic[4:0] shifts;     
     
-    assign tb_shifts = shifts;       // just for tb
-    assign n         = ~(|shifts);   //n=1 for no more shifts
+    //assign tb_shifts = shifts;       // just for tb
+    assign n_is_zero = ~(|shifts);   //n=1 for no more shifts
     
     always_ff @(posedge clk) begin
-            if      (rst)         shifts <= '0;
-            else if (ld)          shifts <= bus[4:0];
-            else if (decr && !n)  shifts <= shifts - 1;        
+            if      (rst)                shifts <= '0;
+            else if (ld)                 shifts <= bus_in[4:0];
+            else if (decr & !n_is_zero)  shifts <= shifts - 1;        
     end    
 endmodule

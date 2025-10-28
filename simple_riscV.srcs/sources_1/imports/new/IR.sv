@@ -20,13 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module IR #(parameter w = 32) (
-    inout  logic[w-1:0]  bus,
-    input  logic         clk,
-    input  logic         c1, c2, IRin, rst,
-    output logic[4:0]    to_control_unit
+    inout  logic[w-1:0]  bus,   //just for tb
+    input  logic         clk, rst,
+    input  logic         c1, c2, IRin,
+    output logic[4:0]    to_control_unit,
+    
+    input  logic[w-1:0]   bus_in,
+    output logic[w-1:0]   bus_out     
     );
-    logic[w-1:0]        out_bus;
-    logic[w-1:0]        inst;
+    logic[w-1:0]         out_bus;
+    logic[w-1:0]         inst;
     
     always_ff @(posedge clk) begin
         if      (rst)  inst <= '0;

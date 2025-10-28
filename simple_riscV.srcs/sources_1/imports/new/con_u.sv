@@ -20,25 +20,27 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module con_u #(parameter w = 32)(
-    inout  logic[w-1:0] bus,
+    //inout  logic[w-1:0] bus,     //just for tb
     input  logic        clk, rst,
-    input  logic[w-1:0] IR,
     input  logic        con_in,
-    output logic        con_out
-    );
-    logic[2:0]  op_code;
-    logic       s_b;
-    logic       cond;
+    output logic        con_out,
     
-    assign      op_code = IR[2:0];
-    assign      s_b     = bus[w-1];
+    input  logic[w-1:0] bus_in
+    );
+    logic[2:0]   op_code;
+    logic        s_b;
+    logic        cond;
+    logic[w-1:0] IR;
+    
+    assign       op_code = IR[2:0];
+    assign       s_b     = bus_in[w-1];
     
     always_comb begin 
         unique case(op_code)
             3'd0 : cond = 0;
             3'd1 : cond = 1;
-            3'd2 : cond = ~(|bus);
-            3'd3 : cond = (|bus);
+            3'd2 : cond = ~(|bus_in);
+            3'd3 : cond = (|bus_in);
             3'd4 : cond = ~s_b;
             3'd5 : cond = s_b;
             default : cond = 1'b0;

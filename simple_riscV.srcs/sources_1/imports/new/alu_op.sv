@@ -22,18 +22,18 @@
 parameter int n_ops_alu = 11;
 
 package alu_op;
-    typedef enum logic [3:0]{
-        BtoC = 4'b0000,
-        shr  = 4'b0001,
-        shl  = 4'b0010,
-        shc  = 4'b0011,
-        shra = 4'b0100,
-        Not  = 4'b0101,
-        inc4 = 4'b0110,
-        add  = 4'b0111,
-        sub  = 4'b1000,
-        Or   = 4'b1001,
-        And  = 4'b1010
+    typedef enum logic [10:0]{
+        BtoC_ = 11'b10000000000,
+        shr_  = 11'b01000000000,
+        shl_  = 11'b00100000000,
+        shc_  = 11'b00010000000,
+        shra_ = 11'b00001000000,
+        Not_  = 11'b00000100000,
+        inc4_ = 11'b00000010000,
+        add_  = 11'b00000001000,
+        sub_  = 11'b00000000100,
+        Or_   = 11'b00000000010,
+        And_  = 11'b00000000001
     } alu_op_t;
 endpackage : alu_op
 
