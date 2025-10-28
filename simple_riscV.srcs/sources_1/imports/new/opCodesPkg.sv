@@ -21,10 +21,10 @@
 
 package opCodesPkg;
 
-localparam int n_ops_max = 32;
-localparam int opc_w = 5;
+//localparam int n_ops_max = 32;
+//localparam int opc_w = 5;
 
-  typedef enum logic [opc_w-1:0] {
+  typedef enum logic [4:0] {
     //NOP  = 5'd0,
     LD   = 5'd1,
     LDR  = 5'd2,
@@ -50,9 +50,9 @@ localparam int opc_w = 5;
     SHR  = 5'd26,
     SHRA = 5'd27,
     SHL  = 5'd28,
-    SHC  = 5'd29
+    SHC  = 5'd29,
     //RFI  = 5'd30,
-    //STOP = 5'd31
+    STOP = 5'd31
   } opcode_e;
 
 endpackage : opCodesPkg
