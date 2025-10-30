@@ -28,7 +28,7 @@ module counter  (
     );
         
     always_ff @(posedge clk) begin
-        if      (rst || End)       count <= 4'b0000;
+        if      (rst | End)        count <= 4'b0000;
         else if (load)             count <= 4'b0110;
         else if (enable & !load)   count <= (count == 4'd15) ? 4'd0 : count + 1;
     end    
@@ -94,10 +94,20 @@ module control_signal_encoder (
         if (T[4] && op[SUB] == 1) begin
             Grc = 1; Rout = 1; Sub = 1; Cin = 1; end                
         if (T[5] && op[SUB] == 1) begin
-            Cout = 1; Gra = 1; Rin = 1; End = 1; end        
-        
-        
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end      
+        ///////////////ldr/////////////////////////////////
+        if (T[3] && op[LDR] == 1) begin
+            PCout = 1; Ain = 1; end
+        if (T[4] && op[LDR] == 1) begin
+            C1out = 1; Add = 1; Cin = 1; end                
+        if (T[5] && op[LDR] == 1) begin
+            Cout = 1; MAin = 1; end  
+        if (T[6] && op[LDR] == 1) begin
+            Read = 1; end  
+        if (T[7] && op[LDR] == 1) begin
+            MDout = 1; Gra = 1; Rin = 1; End = 1; end  
         ////////Generated Control Signals///////////////////
+        
         ctrl_signals[0]  = Gra; 
         ctrl_signals[1]  = Grb;
         ctrl_signals[2]  = Grc;
@@ -158,7 +168,7 @@ module control_unit(
     );    
     
     counter  ctr(
-        .clk(clk), .rst(rst), .enable(Enable), .load(ctrl_signals[35]), .countIn(countIn), .count(count), .End(ctrl_signals[34])
+        .clk(clk), .rst(rst), .enable(Enable), .load(ctrl_signals[35]), .count(count), .End(ctrl_signals[34])
     );
     
     control_step_decoder  ctrl_stp_dcdr(

@@ -21,8 +21,7 @@
 
 
 module SRC_top(
-    input  logic clk, rst, strt,
-    input  logic[32:0]   memory[1023:0]
+    input  logic clk, rst, strt
     );
     localparam            bus_width = 32;
     localparam            mem_size  = 1024;
@@ -33,7 +32,7 @@ module SRC_top(
     logic                 con;
     logic[4:0]            opCode;
     logic[36:0]           ctrl_signals;
-    logic[4:0]            opCode; 
+    logic[bus_width-1:0]  IR_for_reg;
     
     logic[bus_width-1:0]  IR_to_bus;
     logic[bus_width-1:0]  PC_to_bus;
@@ -42,7 +41,7 @@ module SRC_top(
     logic[bus_width-1:0]  RegFile_to_bus;
     
     logic  Rout, BAout, Cout, C1out, C2out, PCout, MDout;
-    
+        
     assign Rout  = ctrl_signals[4];
     assign BAout = ctrl_signals[5];
     assign Cout  = ctrl_signals[19];
@@ -51,19 +50,43 @@ module SRC_top(
     assign PCout = ctrl_signals[25];
     assign MDout = ctrl_signals[27];
     
-    assign Done = '0;
+    assign Done = 1;    
+    typedef enum logic [2:0] {
+          bus_NONE,  // 000
+          bus_REG,   // 001
+          bus_ALU,   // 010
+          bus_IR,    // 011
+          bus_PC,    // 100
+          bus_MD     // 101
+        } bus_src_e;
+        
+    bus_src_e  bus_sel;
     
     always_comb begin
-        bus = '0;
-        if      (Rout)  bus = RegFile_to_bus;
-        else if (BAout) bus = RegFile_to_bus;
-        else if (Cout)  bus = ALU_to_bus;
-        else if (C1out) bus = IR_to_bus;
-        else if (C2out) bus = IR_to_bus;
-        else if (PCout) bus = PC_to_bus;
-        else if (MDout) bus = MD_to_bus;
+        bus_sel = bus_NONE;
+        unique case(1'b1)
+             Rout  : bus_sel = bus_REG;
+             BAout : bus_sel = bus_REG;
+             Cout  : bus_sel = bus_ALU;
+             C1out : bus_sel = bus_IR;
+             C2out : bus_sel = bus_IR;
+             PCout : bus_sel = bus_PC;
+             MDout : bus_sel = bus_MD; 
+             default: /* bus_NONE */;
+        endcase    
     end
     
+    always_comb begin
+    bus = '0;
+    unique case(bus_sel)
+         bus_REG : bus = RegFile_to_bus;
+         bus_ALU : bus = ALU_to_bus;
+         bus_IR  : bus = IR_to_bus;
+         bus_PC  : bus = PC_to_bus;
+         bus_MD  : bus = MD_to_bus;
+    endcase    
+    end
+
     control_unit  SRC_Control_U (
         .clk(clk),
         .rst(rst),
@@ -73,7 +96,7 @@ module SRC_top(
         .ctrl_signals(ctrl_signals),
         .con(con),
         .n_is_zero(n_is_zero)
-         );     
+         );    
     
     IR #(.w(bus_width)) SRC_IR(
         .clk(clk),
@@ -83,7 +106,8 @@ module SRC_top(
         .c1(ctrl_signals[22]),
         .c2(ctrl_signals[23]),
         .IRin(ctrl_signals[21]),
-        .to_control_unit(opCode) );
+        .to_control_unit(opCode),
+        .IR_for_reg(IR_for_reg) );
         
     memory #(.w(bus_width), .mem_size(mem_size)) SRC_memory(
         .bus_in(bus),
@@ -95,8 +119,8 @@ module SRC_top(
         .Wait(ctrl_signals[31]),
         .MAin(ctrl_signals[26]),
         .MDout(ctrl_signals[27]),
-        .MDbus(ctrl_signals[28]),
-        .memory(memory) );
+        .MDbus(ctrl_signals[28])
+        );
         
     PC_u #(.w(bus_width)) SRC_PC (
         .clk(clk),
@@ -135,7 +159,8 @@ module SRC_top(
         .Rout(ctrl_signals[4]),
         .BAout(ctrl_signals[5]),
         .bus_in(bus),
-        .bus_out(IR_to_bus) );  
+        .bus_out(RegFile_to_bus),
+        .IR(IR_for_reg) );  
         
     con_u #(.w(bus_width)) SRC_con_u (
         .clk(clk),
@@ -145,18 +170,16 @@ module SRC_top(
         .bus_in(bus)
     );
     
-    shift_control #(.w(bus_width)) (
+    shift_control #(.w(bus_width)) SRC_shift_control(
         .clk(clk),
         .rst(rst),
         .ld(ctrl_signals[32]),
         .decr(ctrl_signals[33]),       
         .n_is_zero(n_is_zero),
-        .bus_in(bus_in) );    
+        .bus_in(bus) );    
     
 endmodule   
     
-    
-
         
 
 

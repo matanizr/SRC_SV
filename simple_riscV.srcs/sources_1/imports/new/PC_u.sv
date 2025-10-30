@@ -28,16 +28,12 @@ module PC_u #(parameter w = 32)(
     output logic[w-1:0]   bus_out  
     );    
     logic[w-1:0] pc_addr;
-    logic        PCout_q;
+    //logic        PCout_q;
         
     always_ff @(posedge clk) begin
-         if (rst) begin
-            pc_addr  <= '0;
-            PCout_q  <= 1'b0; end     
-         else begin
-            PCout_q           <= PCout;
-            if (PCin) pc_addr <= bus_in; end          
+         if      (rst)  pc_addr <= '0;            
+         else if (PCin) pc_addr <= bus_in;
     end
         
-    assign bus_out = PCout_q ? pc_addr : 'bz;    
+    assign bus_out = PCout ? pc_addr : 'bz;    
 endmodule
