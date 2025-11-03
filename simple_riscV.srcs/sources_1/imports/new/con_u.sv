@@ -25,12 +25,13 @@ module con_u #(parameter w = 32)(
     input  logic        con_in,
     output logic        con_out,
     
-    input  logic[w-1:0] bus_in
+    input  logic[w-1:0] bus_in,
+    input  logic[w-1:0] IR
     );
     logic[2:0]   op_code;
     logic        s_b;
     logic        cond;
-    logic[w-1:0] IR;
+    
     
     assign       op_code = IR[2:0];
     assign       s_b     = bus_in[w-1];

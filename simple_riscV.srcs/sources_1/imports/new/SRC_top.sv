@@ -33,6 +33,7 @@ module SRC_top(
     logic[4:0]            opCode;
     logic[36:0]           ctrl_signals;
     logic[bus_width-1:0]  IR_for_reg;
+    logic[2:0]            IR_to_condition_unit;
     
     logic[bus_width-1:0]  IR_to_bus;
     logic[bus_width-1:0]  PC_to_bus;
@@ -107,7 +108,9 @@ module SRC_top(
         .c2(ctrl_signals[23]),
         .IRin(ctrl_signals[21]),
         .to_control_unit(opCode),
-        .IR_for_reg(IR_for_reg) );
+        .IR_for_reg(IR_for_reg),
+        .IR_to_condition_unit(IR_to_condition_unit) );
+        
         
     memory #(.w(bus_width), .mem_size(mem_size)) SRC_memory(
         .bus_in(bus),
@@ -167,8 +170,8 @@ module SRC_top(
         .rst(rst),
         .con_in(ctrl_signals[20]),
         .con_out(con),
-        .bus_in(bus)
-    );
+        .bus_in(bus),
+        .IR(IR_to_condition_unit));
     
     shift_control #(.w(bus_width)) SRC_shift_control(
         .clk(clk),

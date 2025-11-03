@@ -57,6 +57,8 @@ endmodule
 module control_signal_encoder (
     input  logic[15:0]  T,
     input  logic[31:0]  op,
+    input  logic        con,
+    input  logic        n_is_zero,
     output logic[36:0]  ctrl_signals
     );
     logic Gra, Grb, Grc, Rin, Rout, BAout, BtoC, Shr, Shl, Shc, Shra, Not, Inc4, Add, Sub, Or, And, Ain, Cin, Cout;
@@ -106,8 +108,49 @@ module control_signal_encoder (
             Read = 1; end  
         if (T[7] && op[LDR] == 1) begin
             MDout = 1; Gra = 1; Rin = 1; End = 1; end  
-        ////////Generated Control Signals///////////////////
-        
+        ///////////////neg/////////////////////////////////
+        if (T[3] && op[NEG] == 1) begin
+            Grc = 1; Rout = 1; Ain = 1; end
+        if (T[4] && op[NEG] == 1) begin
+            Grc = 1; Rout = 1; Sub = 1; Cin = 1; end                
+        if (T[5] && op[NEG] == 1) begin
+            Cout = 1; Ain = 1; end  
+        if (T[6] && op[NEG] == 1) begin
+            Cin = 1; Grc = 1; Rout = 1;  Sub = 1; end  
+        if (T[7] && op[NEG] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end  
+        ///////////////or/////////////////////////////////
+        if (T[3] && op[OR] == 1) begin
+            Grb = 1; Rout = 1; Ain = 1; end
+        if (T[4] && op[OR] == 1) begin
+            Grc = 1; Rout = 1; Or = 1; Cin = 1; end                
+        if (T[5] && op[OR] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end  
+        ///////////////BR////////////////////////////////
+        if (T[3] && op[BR] == 1) begin
+            Grc = 1; Rout = 1; CONin = 1; end              
+        if (T[4] && op[BR] == 1) begin
+            if(con == 1) begin 
+                Rout = 1; Grb = 1; PCin = 1; end
+            End = 1; end 
+        ///////////////shl/////////////////////////////////
+        if (T[3] && op[SHL] == 1) begin
+            C1out = 1; Ld = 1; end
+        if (T[4] && op[SHL] == 1) begin
+            if (n_is_zero == 1) begin
+            Grc = 1; Rout = 1; Ld = 1; end 
+            end               
+        if (T[5] && op[SHL] == 1) begin
+            Grb = 1; Rout = 1; BtoC = 1; Cin = 1; end  
+        if (T[6] && op[SHL] == 1) begin
+            if (n_is_zero != 1) begin 
+            Cout = 1; Shl = 1; Cin = 1;  Decr = 1; Goto6 = 1; end  
+            end
+        if (T[7] && op[SHL] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end  
+            
+            
+////////Generated Control Signals///////////////////    
         ctrl_signals[0]  = Gra; 
         ctrl_signals[1]  = Grb;
         ctrl_signals[2]  = Grc;
@@ -150,7 +193,7 @@ endmodule
 
 
 module control_unit(
-    input              clk, rst, Done, strt, con, n_is_zero,
+    input  logic       clk, rst, Done, strt, con, n_is_zero,
     input  logic[4:0]  opCode,    
     output logic[36:0] ctrl_signals
     );
@@ -180,7 +223,7 @@ module control_unit(
     );
     
     control_signal_encoder  ctrl_sig_encdr (
-        .T(T), .op(op), .ctrl_signals(ctrl_signals)
+        .T(T), .op(op), .ctrl_signals(ctrl_signals), .con(con), .n_is_zero(n_is_zero)
     );    
 endmodule 
 
