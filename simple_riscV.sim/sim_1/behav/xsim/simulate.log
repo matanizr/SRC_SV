@@ -1,0 +1,23 @@
+Time resolution is 1 ps
+WARNING: 0ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 0ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/SRC_top.sv:82
+WARNING: 0ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/SRC_top.sv:82
+WARNING: 0ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 40ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 70ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/SRC_top.sv:82
+WARNING: 90ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 120ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 120ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/SRC_top.sv:82
+WARNING: 280ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 310ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/SRC_top.sv:82
+WARNING: 330ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 360ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 360ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/SRC_top.sv:82
+WARNING: 520ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 550ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 640ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/SRC_top.sv:82
+WARNING: 660ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 690ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/register_file.sv:56
+WARNING: 690ns : none of the conditions were true for unique case from File:C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sources_1/imports/new/SRC_top.sv:82
+finish
+$finish called at time : 2020 ns : File "C:/Users/matan/OneDrive/Desktop/simple_riscV/simple_riscV.srcs/sim_1/new/tb_SRC.sv" Line 42
