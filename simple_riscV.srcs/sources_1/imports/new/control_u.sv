@@ -79,24 +79,17 @@ module control_signal_encoder (
             Read  = 1; Cout  = 1; PCin  = 1; end            
         if (T[2]) begin
             MDout  = 1; IRin  = 1; end    
-        
-        ///////////////stop////////////////////////////////
-        if (T[3] && op[STOP] == 1) begin
-            Stop = 1; end                        
-        ////////////////add////////////////////////////////        
-        if (T[3] && op[ADD] == 1) begin
-            Grb = 1; Rout = 1; Ain = 1; end
-        if (T[4] && op[ADD] == 1) begin
-            Grc = 1; Rout = 1; Add = 1; Cin = 1; end                
-        if (T[5] && op[ADD] == 1) begin
-            Cout = 1; Gra = 1; Rin = 1; End = 1; end
-        ///////////////sub/////////////////////////////////
-        if (T[3] && op[SUB] == 1) begin
-            Grb = 1; Rout = 1; Ain = 1; end
-        if (T[4] && op[SUB] == 1) begin
-            Grc = 1; Rout = 1; Sub = 1; Cin = 1; end                
-        if (T[5] && op[SUB] == 1) begin
-            Cout = 1; Gra = 1; Rin = 1; End = 1; end      
+        ////////////////ld/////////////////////////////////  
+        if (T[3] && op[LD] == 1) begin
+            Grb = 1 ;BAout = 1; Ain = 1; end
+        if (T[4] && op[LD] == 1) begin
+            C2out = 1; Add = 1; Cin = 1; end                
+        if (T[5] && op[LD] == 1) begin
+            Cout = 1; MAin = 1; end  
+        if (T[6] && op[LD] == 1) begin
+            Read = 1; end  
+        if (T[7] && op[LD] == 1) begin
+            MDout = 1; Gra = 1; Rin = 1; End = 1; end 
         ///////////////ldr/////////////////////////////////
         if (T[3] && op[LDR] == 1) begin
             PCout = 1; Ain = 1; end
@@ -108,6 +101,79 @@ module control_signal_encoder (
             Read = 1; end  
         if (T[7] && op[LDR] == 1) begin
             MDout = 1; Gra = 1; Rin = 1; End = 1; end  
+        ////////////////st/////////////////////////////////
+        if (T[3] && op[ST] == 1) begin
+            Grb = 1 ;BAout = 1; Ain = 1; end
+        if (T[4] && op[ST] == 1) begin
+            C2out = 1; Add = 1; Cin = 1; end                
+        if (T[5] && op[ST] == 1) begin
+            Cout = 1; MAin = 1; end  
+        if (T[6] && op[ST] == 1) begin
+            Gra = 1; Rout = 1; MDbus = 1; end  
+        if (T[7] && op[ST] == 1) begin
+            Write = 1; End = 1; end 
+        ////////////////str/////////////////////////////////
+        if (T[3] && op[STR] == 1) begin
+            PCout = 1; Ain = 1; end
+        if (T[4] && op[STR] == 1) begin
+            C1out = 1; Add = 1; Cin = 1; end                
+        if (T[5] && op[STR] == 1) begin
+            Cout = 1; MAin = 1; end  
+        if (T[6] && op[STR] == 1) begin
+            Gra = 1; Rout = 1; MDbus = 1; end  
+        if (T[7] && op[STR] == 1) begin
+            Write = 1; End = 1; end 
+        ////////////////la////////////////////////////////        
+        if (T[3] && op[LA] == 1) begin
+            Grb = 1; BAout = 1; Ain = 1; end
+        if (T[4] && op[LA] == 1) begin
+            C2out = 1; Add = 1; Cin = 1; end                
+        if (T[5] && op[LA] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end
+        ////////////////lar////////////////////////////////        
+        if (T[3] && op[LAR] == 1) begin
+            PCout = 1; Ain = 1; end
+        if (T[4] && op[LAR] == 1) begin
+            C1out = 1; Add = 1; Cin = 1; end                
+        if (T[5] && op[LAR] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end
+        ///////////////br////////////////////////////////
+        if (T[3] && op[BR] == 1) begin
+            Grc = 1; Rout = 1; CONin = 1; end              
+        if (T[4] && op[BR] == 1) begin
+            if(con == 1) begin 
+                Rout = 1; Grb = 1; PCin = 1; end
+            End = 1; end 
+        ///////////////brl////////////////////////////////
+        if (T[3] && op[BRL] == 1) begin
+            Grc = 1; Rout = 1; CONin = 1; end 
+        if (T[4] && op[BRL] == 1) begin
+            PCout = 1; Gra = 1; Rin = 1; end              
+        if (T[5] && op[BRL] == 1) begin
+            if(con == 1) begin 
+                Rout = 1; Grb = 1; PCin = 1; end
+            End = 1; end 
+        ////////////////add////////////////////////////////        
+        if (T[3] && op[ADD] == 1) begin
+            Grb = 1; Rout = 1; Ain = 1; end
+        if (T[4] && op[ADD] == 1) begin
+            Grc = 1; Rout = 1; Add = 1; Cin = 1; end                
+        if (T[5] && op[ADD] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end
+        ////////////////addi////////////////////////////////        
+        if (T[3] && op[ADDI] == 1) begin
+            Grb = 1; Rout = 1; Ain = 1; end
+        if (T[4] && op[ADDI] == 1) begin
+            C2out = 1; Add = 1; Cin = 1; end                
+        if (T[5] && op[ADDI] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end
+        ///////////////sub/////////////////////////////////
+        if (T[3] && op[SUB] == 1) begin
+            Grb = 1; Rout = 1; Ain = 1; end
+        if (T[4] && op[SUB] == 1) begin
+            Grc = 1; Rout = 1; Sub = 1; Cin = 1; end                
+        if (T[5] && op[SUB] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end
         ///////////////neg/////////////////////////////////
         if (T[3] && op[NEG] == 1) begin
             Grc = 1; Rout = 1; Ain = 1; end
@@ -119,20 +185,69 @@ module control_signal_encoder (
             Cin = 1; Grc = 1; Rout = 1;  Sub = 1; end  
         if (T[7] && op[NEG] == 1) begin
             Cout = 1; Gra = 1; Rin = 1; End = 1; end  
+        ///////////////and/////////////////////////////////    
+        if (T[3] && op[ADD] == 1) begin
+            Grb = 1; Rout = 1; Ain = 1; end
+        if (T[4] && op[ADD] == 1) begin
+            Grc = 1; Rout = 1; And = 1; Cin = 1; end                
+        if (T[5] && op[ADD] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end    
+        ///////////////andi/////////////////////////////////    
+        if (T[3] && op[ADD] == 1) begin
+            Grb = 1; Rout = 1; Ain = 1; end
+        if (T[4] && op[ADD] == 1) begin
+            C2out = 1; And = 1; Cin = 1; end                
+        if (T[5] && op[ADD] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end     
         ///////////////or/////////////////////////////////
         if (T[3] && op[OR] == 1) begin
             Grb = 1; Rout = 1; Ain = 1; end
         if (T[4] && op[OR] == 1) begin
             Grc = 1; Rout = 1; Or = 1; Cin = 1; end                
         if (T[5] && op[OR] == 1) begin
-            Cout = 1; Gra = 1; Rin = 1; End = 1; end  
-        ///////////////BR////////////////////////////////
-        if (T[3] && op[BR] == 1) begin
-            Grc = 1; Rout = 1; CONin = 1; end              
-        if (T[4] && op[BR] == 1) begin
-            if(con == 1) begin 
-                Rout = 1; Grb = 1; PCin = 1; end
-            End = 1; end 
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end              
+        ///////////////ori/////////////////////////////////
+        if (T[3] && op[ORI] == 1) begin
+            Grb = 1; Rout = 1; Ain = 1; end
+        if (T[4] && op[ORI] == 1) begin
+            C2out = 1; Or = 1; Cin = 1; end                
+        if (T[5] && op[ORI] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end               
+        ///////////////not/////////////////////////////////
+        if (T[3] && op[NOT] == 1) begin
+            Grc = 1; Rout = 1; Not = 1; Cin = 1; end                
+        if (T[4] && op[NOT] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end       
+        ///////////////shr/////////////////////////////////
+        if (T[3] && op[SHR] == 1) begin
+            C1out = 1; Ld = 1; end
+        if (T[4] && op[SHR] == 1) begin
+            if (n_is_zero == 1) begin
+            Grc = 1; Rout = 1; Ld = 1; end 
+            end               
+        if (T[5] && op[SHR] == 1) begin
+            Grb = 1; Rout = 1; BtoC = 1; Cin = 1; end  
+        if (T[6] && op[SHR] == 1) begin
+            if (n_is_zero != 1) begin 
+            Cout = 1; Shr = 1; Cin = 1;  Decr = 1; Goto6 = 1; end  
+            end
+        if (T[7] && op[SHR] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end              
+        ///////////////shra/////////////////////////////////
+        if (T[3] && op[SHRA] == 1) begin
+            C1out = 1; Ld = 1; end
+        if (T[4] && op[SHRA] == 1) begin
+            if (n_is_zero == 1) begin
+            Grc = 1; Rout = 1; Ld = 1; end 
+            end               
+        if (T[5] && op[SHRA] == 1) begin
+            Grb = 1; Rout = 1; BtoC = 1; Cin = 1; end  
+        if (T[6] && op[SHRA] == 1) begin
+            if (n_is_zero != 1) begin 
+            Cout = 1; Shra = 1; Cin = 1;  Decr = 1; Goto6 = 1; end  
+            end
+        if (T[7] && op[SHRA] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end               
         ///////////////shl/////////////////////////////////
         if (T[3] && op[SHL] == 1) begin
             C1out = 1; Ld = 1; end
@@ -147,9 +262,27 @@ module control_signal_encoder (
             Cout = 1; Shl = 1; Cin = 1;  Decr = 1; Goto6 = 1; end  
             end
         if (T[7] && op[SHL] == 1) begin
-            Cout = 1; Gra = 1; Rin = 1; End = 1; end  
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end        
+        ///////////////shc/////////////////////////////////
+        if (T[3] && op[SHC] == 1) begin
+            C1out = 1; Ld = 1; end
+        if (T[4] && op[SHC] == 1) begin
+            if (n_is_zero == 1) begin
+            Grc = 1; Rout = 1; Ld = 1; end 
+            end               
+        if (T[5] && op[SHC] == 1) begin
+            Grb = 1; Rout = 1; BtoC = 1; Cin = 1; end  
+        if (T[6] && op[SHC] == 1) begin
+            if (n_is_zero != 1) begin 
+            Cout = 1; Shc = 1; Cin = 1;  Decr = 1; Goto6 = 1; end  
+            end
+        if (T[7] && op[SHC] == 1) begin
+            Cout = 1; Gra = 1; Rin = 1; End = 1; end          
+        ///////////////stop////////////////////////////////        
+        if (T[3] && op[STOP] == 1) begin
+            Stop = 1; end        
             
-            
+           
 ////////Generated Control Signals///////////////////    
         ctrl_signals[0]  = Gra; 
         ctrl_signals[1]  = Grb;
