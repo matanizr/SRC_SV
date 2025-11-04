@@ -27,7 +27,7 @@ module shift_control #(parameter w = 32) (
     output logic          n_is_zero,    
     //output logic[4:0]     tb_shifts,     // just for tb
     
-    input  logic[w-1:0]   bus_in
+    input  logic[4:0]   shifts_num
     );    
     logic[4:0] shifts;     
     
@@ -36,7 +36,7 @@ module shift_control #(parameter w = 32) (
     
     always_ff @(posedge clk) begin
             if      (rst)                shifts <= '0;
-            else if (ld)                 shifts <= bus_in[4:0];
+            else if (ld)                 shifts <= shifts_num;
             else if (decr & !n_is_zero)  shifts <= shifts - 1;        
     end    
 endmodule

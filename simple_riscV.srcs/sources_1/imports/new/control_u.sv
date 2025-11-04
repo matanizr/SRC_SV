@@ -35,11 +35,11 @@ module counter  (
 endmodule
 
 module control_step_decoder (
-    input  logic[3:0]   count,
-    output logic[15:0]  T 
+    input  logic[3:0]  count,
+    output logic[7:0]  T 
     );
     always_comb begin
-        T        = 16'b0;
+        T        = 8'b0;
         T[count] = 1'b1;
     end    
 endmodule
@@ -55,7 +55,7 @@ module decoder (
 endmodule
 
 module control_signal_encoder (
-    input  logic[15:0]  T,
+    input  logic[7:0]   T,
     input  logic[31:0]  op,
     input  logic        con,
     input  logic        n_is_zero,
@@ -186,18 +186,18 @@ module control_signal_encoder (
         if (T[7] && op[NEG] == 1) begin
             Cout = 1; Gra = 1; Rin = 1; End = 1; end  
         ///////////////and/////////////////////////////////    
-        if (T[3] && op[ADD] == 1) begin
+        if (T[3] && op[AND] == 1) begin
             Grb = 1; Rout = 1; Ain = 1; end
-        if (T[4] && op[ADD] == 1) begin
+        if (T[4] && op[AND] == 1) begin
             Grc = 1; Rout = 1; And = 1; Cin = 1; end                
-        if (T[5] && op[ADD] == 1) begin
+        if (T[5] && op[AND] == 1) begin
             Cout = 1; Gra = 1; Rin = 1; End = 1; end    
         ///////////////andi/////////////////////////////////    
-        if (T[3] && op[ADD] == 1) begin
+        if (T[3] && op[ANDI] == 1) begin
             Grb = 1; Rout = 1; Ain = 1; end
-        if (T[4] && op[ADD] == 1) begin
+        if (T[4] && op[ANDI] == 1) begin
             C2out = 1; And = 1; Cin = 1; end                
-        if (T[5] && op[ADD] == 1) begin
+        if (T[5] && op[ANDI] == 1) begin
             Cout = 1; Gra = 1; Rin = 1; End = 1; end     
         ///////////////or/////////////////////////////////
         if (T[3] && op[OR] == 1) begin
@@ -334,7 +334,7 @@ module control_unit(
     logic        read, write, Wait;
     logic        Enable, R, W;
     logic[3:0]   count;
-    logic[15:0]  T;
+    logic[7:0]   T;
     logic[31:0]  op;
     
     

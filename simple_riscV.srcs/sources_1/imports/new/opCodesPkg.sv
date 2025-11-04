@@ -25,7 +25,7 @@ package opCodesPkg;
 //localparam int opc_w = 5;
 
   typedef enum logic [4:0] {
-    //NOP  = 5'd0,
+    NOP  = 5'd0,    // This instruction is not implemented
     LD   = 5'd1,
     LDR  = 5'd2,
     ST   = 5'd3,
@@ -34,14 +34,14 @@ package opCodesPkg;
     LAR  = 5'd6,
     BR   = 5'd8,
     BRL  = 5'd9,
-    //EEN  = 5'd10,
-    //EDI  = 5'd11,
+    EEN  = 5'd10,    // This instruction is not implemented
+    EDI  = 5'd11,    // This instruction is not implemented
     ADD  = 5'd12,
     ADDI = 5'd13,
     SUB  = 5'd14,
     NEG  = 5'd15,
-    //SVI  = 5'd16,
-    //RI   = 5'd17,
+    SVI  = 5'd16,    // This instruction is not implemented
+    RI   = 5'd17,    // This instruction is not implemented
     AND  = 5'd20,
     ANDI = 5'd21,
     OR   = 5'd22,
@@ -51,7 +51,7 @@ package opCodesPkg;
     SHRA = 5'd27,
     SHL  = 5'd28,
     SHC  = 5'd29,
-    //RFI  = 5'd30,
+    RFI  = 5'd30,    // This instruction is not implemented
     STOP = 5'd31
   } opcode_e;
 

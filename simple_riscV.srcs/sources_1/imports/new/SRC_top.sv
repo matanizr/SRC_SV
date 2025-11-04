@@ -32,7 +32,7 @@ module SRC_top(
     logic                 con;
     logic[4:0]            opCode;
     logic[36:0]           ctrl_signals;
-    logic[bus_width-1:0]  IR_for_reg;
+    logic[bus_width-1:0]  IR;
     logic[2:0]            IR_to_condition_unit;
     
     logic[bus_width-1:0]  IR_to_bus;
@@ -65,7 +65,7 @@ module SRC_top(
     
     always_comb begin
         bus_sel = bus_NONE;
-        unique case(1'b1)
+        unique0 case(1'b1)
              Rout  : bus_sel = bus_REG;
              BAout : bus_sel = bus_REG;
              Cout  : bus_sel = bus_ALU;
@@ -79,7 +79,7 @@ module SRC_top(
     
     always_comb begin
     bus = '0;
-    unique case(bus_sel)
+    unique0 case(bus_sel)
          bus_REG : bus = RegFile_to_bus;
          bus_ALU : bus = ALU_to_bus;
          bus_IR  : bus = IR_to_bus;
@@ -108,7 +108,7 @@ module SRC_top(
         .c2(ctrl_signals[23]),
         .IRin(ctrl_signals[21]),
         .to_control_unit(opCode),
-        .IR_for_reg(IR_for_reg),
+        .IR_for_reg(IR),
         .IR_to_condition_unit(IR_to_condition_unit) );
         
         
@@ -163,7 +163,11 @@ module SRC_top(
         .BAout(ctrl_signals[5]),
         .bus_in(bus),
         .bus_out(RegFile_to_bus),
-        .IR(IR_for_reg) );  
+        //.IR(IR_for_reg)
+        .ra(IR[26:22]),
+        .rb(IR[21:17]),
+        .rc(IR[16:12])
+         );  
         
     con_u #(.w(bus_width)) SRC_con_u (
         .clk(clk),
@@ -171,7 +175,7 @@ module SRC_top(
         .con_in(ctrl_signals[20]),
         .con_out(con),
         .bus_in(bus),
-        .IR(IR_to_condition_unit));
+        .op_code(IR_to_condition_unit));
     
     shift_control #(.w(bus_width)) SRC_shift_control(
         .clk(clk),
@@ -179,7 +183,7 @@ module SRC_top(
         .ld(ctrl_signals[32]),
         .decr(ctrl_signals[33]),       
         .n_is_zero(n_is_zero),
-        .bus_in(bus) );    
+        .shifts_num(bus[4:0]) );    
     
 endmodule   
     
