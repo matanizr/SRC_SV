@@ -54,8 +54,8 @@ d_FF done_ff (
     .rst(rst),
     .Q(SDone) );
 
-assign notBusy   = ~Wait | ~(R | W);
-assign Enable = Run & (SDone | notBusy);    
+assign notBusy = ~Wait | ~(R | W);
+assign Enable  = Run & (SDone | notBusy);    
     
 endmodule
 

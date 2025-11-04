@@ -37,7 +37,7 @@ SRC_top dut (
 initial begin     
     rst = 1;                         @(posedge clk);
     rst = 0;  strt = 1;              @(posedge clk);
-    strt = 0;            repeat(200) @(posedge clk);  
+    strt = 0;            repeat(3000) @(posedge clk); 
     $display("finish");  
     $finish;
 end

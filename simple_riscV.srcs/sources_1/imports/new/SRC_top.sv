@@ -1,31 +1,26 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: matan and roei labs
+// Engineer: matan izraeli and roei sabag
 // 
-// Create Date: 26.10.2025 18:52:05
-// Design Name: 
-// Module Name: SRC_top
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// Create Date : 26.10.2025 18:52:05
+// Design Name : SRC top
+// Module Name : SRC_top
+// Project Name: simple risc-V
+// Description : Top-level wrapper connecting all SRC processor component
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module SRC_top(
-    input  logic clk, rst, strt
-    );
-    localparam            bus_width = 32;
-    localparam            mem_size  = 1024;
+    input  logic clk, rst,
+    input  logic strt,         //pulse to starts the controller
+    output logic demi_Output_for_synthesis
+    );    
     
+    ///////////parameters///////////////////////////////////
+    localparam            bus_width = 32;
+    localparam            mem_size  = 1024;  
+    
+    //////////global shared bus + status/control wires//////
     logic[bus_width-1:0]  bus;
     logic                 Done;
     logic                 n_is_zero;
@@ -33,25 +28,30 @@ module SRC_top(
     logic[4:0]            opCode;
     logic[36:0]           ctrl_signals;
     logic[bus_width-1:0]  IR;
-    logic[2:0]            IR_to_condition_unit;
-    
+    logic[2:0]            IR_to_condition_unit;  
+      
+    //////////////define bus for each unit/////////////////////
     logic[bus_width-1:0]  IR_to_bus;
     logic[bus_width-1:0]  PC_to_bus;
     logic[bus_width-1:0]  MD_to_bus;
     logic[bus_width-1:0]  ALU_to_bus;
     logic[bus_width-1:0]  RegFile_to_bus;
     
+    ////////ctrl signals that define which unit drives the bus////////
     logic  Rout, BAout, Cout, C1out, C2out, PCout, MDout;
-        
+            
     assign Rout  = ctrl_signals[4];
     assign BAout = ctrl_signals[5];
     assign Cout  = ctrl_signals[19];
     assign C1out = ctrl_signals[22];
     assign C2out = ctrl_signals[23];
     assign PCout = ctrl_signals[25];
-    assign MDout = ctrl_signals[27];
+    assign MDout = ctrl_signals[27];   
     
-    assign Done = 1;    
+    ////////assign a demi output for synthesis only///////////
+    assign demi_Output_for_synthesis = ctrl_signals[36];
+
+    ///////enum added for readabilty/////////////////////////
     typedef enum logic [2:0] {
           bus_NONE,  // 000
           bus_REG,   // 001
@@ -59,10 +59,10 @@ module SRC_top(
           bus_IR,    // 011
           bus_PC,    // 100
           bus_MD     // 101
-        } bus_src_e;
-        
+        } bus_src_e;        
     bus_src_e  bus_sel;
     
+    /////////bus select - define which unit drives the main bus///////////
     always_comb begin
         bus_sel = bus_NONE;
         unique0 case(1'b1)
@@ -77,6 +77,7 @@ module SRC_top(
         endcase    
     end
     
+    ////////////wiring main bus to selected unit-bus/////////////
     always_comb begin
     bus = '0;
     unique0 case(bus_sel)
@@ -88,6 +89,7 @@ module SRC_top(
     endcase    
     end
 
+    /////internal component wiring within the system///////////////
     control_unit  SRC_Control_U (
         .clk(clk),
         .rst(rst),
@@ -121,7 +123,8 @@ module SRC_top(
         .write(ctrl_signals[30]),
         .MAin(ctrl_signals[26]),
         .MDout(ctrl_signals[27]),
-        .MDbus(ctrl_signals[28])
+        .MDbus(ctrl_signals[28]),
+        .Done(Done)
         );
         
     PC_u #(.w(bus_width)) SRC_PC (

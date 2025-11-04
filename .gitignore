@@ -25,6 +25,9 @@ simple_riscV.cache/
 simple_riscV.hw/
 simple_riscV.ip_user_files/
 simple_riscV.sim/
+simple_riscV/program_init/
+simple_riscV/dfx_runtime
+simple_riscV/temp_test
 
 # OS / misc
 Thumbs.db
