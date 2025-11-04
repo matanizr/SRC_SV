@@ -21,13 +21,13 @@
 archive_project_summary.txt
 dfx_runtime.txt
 temp_test.hex
+program_init/
 
 # Project-specific (safety net)
 simple_riscV.cache/
 simple_riscV.hw/
 simple_riscV.ip_user_files/
 simple_riscV.sim/
-simple_riscV/program_init/
 
 # OS / misc
 Thumbs.db
