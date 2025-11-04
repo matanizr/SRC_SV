@@ -22,12 +22,12 @@
 module memory #(
     parameter w = 32,
     parameter mem_size = 1024,
-    parameter string initfile = "C:\\Users\\matan\\OneDrive\\Desktop\\simple_riscV\\program_init\\temp_test.hex"
+    parameter string initfile = "C:\\simple_riscV_project\\simple_riscV\\temp_test.hex"
     )(    
     //inout  logic[w-1:0]   bus,   //just for tb
     input  logic          clk,
     input  logic          rst,
-    input  logic          read, write, Wait,
+    input  logic          read, write,
     input  logic          MAin,
     input  logic          MDout, MDbus,    
     input  logic[w-1:0]   bus_in,
@@ -50,7 +50,7 @@ module memory #(
     logic[addr_bits-1:0]  MA;    
     
     logic                 strobe;
-    assign                strobe = ~Wait;
+    assign                strobe = 1'b1;
 
     always_ff @(posedge clk) begin
         if      (rst)   MA <= '0;

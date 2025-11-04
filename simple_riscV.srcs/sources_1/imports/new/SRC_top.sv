@@ -119,7 +119,6 @@ module SRC_top(
         .clk(clk),
         .read(ctrl_signals[29]),
         .write(ctrl_signals[30]),
-        .Wait(ctrl_signals[31]),
         .MAin(ctrl_signals[26]),
         .MDout(ctrl_signals[27]),
         .MDbus(ctrl_signals[28])
