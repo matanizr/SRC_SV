@@ -1,24 +1,4 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 19.10.2025 18:18:18
-// Design Name: 
-// Module Name: tb_PC
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
 
 module      tb_PC;
 
@@ -64,51 +44,3 @@ initial begin
 end
 endmodule
 
-/*
-clocking cb @(posedge clk_tb);
-    output val_bus, drive_bus, rst; 
-endclocking
-
-clocking ctrl_cb @(posedge clk);
-    output PCin, PCout; 
-endclocking
-
-initial begin
-    cb.rst           <= 1; @(ctrl_cb); @(cb)
-    cb.rst           <= 0;
-    
-    cb.val_bus   <= 32'hF;
-    cb.drive_bus <= 1;        
-    ctrl_cb.PCin      <= 1; @(ctrl_cb);
-    ctrl_cb.PCin      <= 0;
-
-    cb.val_bus   <= 32'b0; @(ctrl_cb);
-    cb.drive_bus <= 0;
-    ctrl_cb.PCout     <= 1; @(ctrl_cb); 
-    
-    $finish;
-*/
-    
-    
-/* work
-clocking cb @(posedge clk);
-    output val_bus, drive_bus, rst, PCin, PCout; 
-endclocking
-
-initial begin
-    cb.rst       <= 1; @(cb)
-    cb.rst       <= 0;
-    
-    cb.val_bus   <= 32'hF;
-    cb.drive_bus <= 1;        
-    cb.PCin      <= 1; @(cb);
-    cb.PCin      <= 0;
-
-    cb.val_bus   <= 32'b0;
-    
-    cb.PCout     <= 1; @(cb); 
-    cb.PCout     <= 0;
-    cb.drive_bus <= 0; @(cb)
-    
-    $finish;
-*/

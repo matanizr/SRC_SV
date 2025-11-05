@@ -1,23 +1,4 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 23.09.2025 22:39:33
-// Design Name: 
-// Module Name: tb_register_file
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
 module tb_register_file;
 localparam int  w = 32,  n = 32;
@@ -49,9 +30,6 @@ regfile #(
     .Rin  (Rin),
     .Rout (Rout),
     .BAout(BAout)
-//    ,.Ra_check(Ra_check),
-//     .Rb_check(Rb_check),
-//     .Rc_check(Rc_check)
 );
 
 clocking cb @(negedge clk);

@@ -1,23 +1,4 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 03.10.2025 19:14:45
-// Design Name: 
-// Module Name: memory_tb
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
 module tb_memory;
     localparam   w = 32;
@@ -92,25 +73,3 @@ assign bus = (tb_drive_bus) ? tb_val_bus : 'bz;
         $finish;
     end
 endmodule
-
-
-/*      @(posedge clk);
-            rst = 0;
-        @(posedge clk);
-            tb_drive_bus = 1; tb_val_bus = 32'd1;          
-            MAin  = 1;
-        @(posedge clk);
-            tb_val_bus = 32'd8; 
-            MAin  = 0;            
-            MDbus = 1;
-        @(posedge clk);
-            write = 1;
-        @(posedge clk);
-            tb_drive_bus = 0;
-            write = 0;
-            read  = 1;
-            MDout = 1;
-        @(posedge clk);
-            read  = 0;
-        repeat(2) @(posedge clk);
-            MDout = 0;*/

@@ -11,7 +11,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module SRC_top(
-    input  logic clk, rst,
+    input  logic clk, rst,     //clock and signal for reset
     input  logic strt,         //pulse to starts the controller
     output logic demi_Output_for_synthesis
     );    
@@ -21,12 +21,10 @@ module SRC_top(
     localparam            mem_size  = 1024;  
     
     //////////global shared bus + status/control wires//////
-    logic[bus_width-1:0]  bus;
-    logic                 Done;
-    logic                 n_is_zero;
-    logic                 con;
+    logic[bus_width-1:0]  bus;     //the shared bus
+    logic                 Done, n_is_zero, con;  
     logic[4:0]            opCode;
-    logic[36:0]           ctrl_signals;
+    logic[36:0]           ctrl_signals;   //signals from the control unit to all units in the CPU
     logic[bus_width-1:0]  IR;
     logic[2:0]            IR_to_condition_unit;  
       

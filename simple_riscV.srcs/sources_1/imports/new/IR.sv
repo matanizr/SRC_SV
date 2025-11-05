@@ -17,11 +17,11 @@ module IR #(parameter w = 32) (
     output logic[4:0]    to_control_unit,   //the IR sends the opCode directly to the controller
     output logic[2:0]    IR_to_condition_unit,  //define the condition to check for the condition_unit
     
-    input  logic[w-1:0]   bus_in,
-    output logic[w-1:0]   bus_out,
-    output logic[w-1:0]   IR_for_reg       //chose whitch registers will be ra,rb,rc
+    input  logic[w-1:0]   bus_in,           //input from the bus
+    output logic[w-1:0]   bus_out,          //output to the bus
+    output logic[w-1:0]   IR_for_reg        //chose whitch registers will be ra,rb,rc
     );
-    logic[w-1:0]         out_bus;
+    logic[w-1:0]         out_bus;          
     logic[w-1:0]         inst;            //the instruction that the IR holds
     
     assign IR_for_reg = inst;             //send the unstruction to the registers unit

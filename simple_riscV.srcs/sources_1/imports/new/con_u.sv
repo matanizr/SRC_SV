@@ -1,38 +1,29 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: matan and roei labs
+// Engineer: matan izraeli and roei sabag
 // 
-// Create Date: 30.09.2025 17:10:21
-// Design Name: 
-// Module Name: con_u
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// Create Date : 26.10.2025 18:52:05
+// Design Name : condition unit
+// Module Name : con_u
+// Description : The condition unit evaluates the opcode and the current bus value to generate the condition signal used for conditional execution
 //////////////////////////////////////////////////////////////////////////////////
 
 module con_u #(parameter w = 32)(
     //inout  logic[w-1:0] bus,     //just for tb
-    input  logic        clk, rst,
-    input  logic        con_in,
-    output logic        con_out,
+    input  logic        clk, rst,  // clock and reset signal
+    input  logic        con_in,    //signal to send the condition result to the control unit
+    output logic        con_out,   //the condition result to the bus
     
-    input  logic[w-1:0] bus_in,
-    input  logic[2:0] op_code
+    input  logic[w-1:0] bus_in,    //input from the bus
+    input  logic[2:0] op_code      //opcode from the IR defining which condition to check
     );
-    logic        s_b;
-    logic        cond;
+    logic  s_b;     //sign-bit
+    logic  cond;    //condition result
     
-    assign       s_b     = bus_in[w-1];
+    assign s_b  = bus_in[w-1];
     
+    /////////condition evaluation determined by the opcode from the IR//////////
     always_comb begin 
         unique case(op_code)
             3'd0 : cond = 0;
@@ -46,8 +37,8 @@ module con_u #(parameter w = 32)(
     end    
 
     always_ff @(posedge clk) begin
-        if      (rst)     con_out <= 1'b0;
-        else if (con_in)  con_out <= cond;
+        if      (rst)     con_out <= 1'b0;     // reset con_out if rst=1
+        else if (con_in)  con_out <= cond;     // send the result to the bus if con_in = 1
     end
 endmodule
 

@@ -14,14 +14,14 @@ import opCodesPkg::*;
 
 /////////the SRC step counter////////////////////////////////////////
 module counter  (
-    input  logic        enable, load, rst, clk, End,
-    output logic[3:0]   count
+    input  logic        enable, load, rst, clk, End,       //clock and other signals
+    output logic[3:0]   count                              //counter for steps for every instruction
     );
         
     always_ff @(posedge clk) begin
         if      (rst | End)        count <= 4'b0000;  //Counter = 0 at the end of each instruction
         else if (load)             count <= 4'b0110;  //jump back to step 6 (loop for the shifts)
-        else if (enable & !load)   count <= (count == 4'd15) ? 4'd0 : count + 1;
+        else if (enable & !load)   count <= (count == 4'd15) ? 4'd0 : count + 1;   //reset the counter if rst=1 or if count get to 15(not suppose the happen)
     end    
 endmodule
 
@@ -32,7 +32,7 @@ module control_step_decoder (
     );
     always_comb begin
         T        = 8'b0;
-        T[count] = 1'b1;
+        T[count] = 1'b1;   //T[n] is 'on' for the n step of every instruction
     end    
 endmodule
 
@@ -43,7 +43,7 @@ module decoder (
     );
     always_comb begin
         op = '0;        
-        op[opCode] = 1;
+        op[opCode] = 1;       //op[n] is 'on' for operation number n (from the ISA)
                 
    ///////instruction that is not implemented///////
         op[NOP] = 1'b0;
@@ -337,16 +337,16 @@ endmodule
 
 //////////control unit wraper//////////////////////////
 module control_unit(
-    input  logic       clk, rst, Done, strt, con, n_is_zero,
-    input  logic[4:0]  opCode,    
-    output logic[36:0] ctrl_signals
+    input  logic       clk, rst, Done, strt, con, n_is_zero, //clock and signals
+    input  logic[4:0]  opCode,                               //the opCode for instruction
+    output logic[36:0] ctrl_signals         //the output signals from the control unit to all the units in the CPU
     );
     logic[3:0]   countIn;
     logic        read, write;
     logic        Enable, R, W;
-    logic[3:0]   count;
-    logic[7:0]   T;
-    logic[31:0]  op;
+    logic[3:0]   count;    //counts for steps
+    logic[7:0]   T;        //step num
+    logic[31:0]  op;       //op for the control unit to commit (from the ISA)
     
     
     clocking_logic  clk_logic(
