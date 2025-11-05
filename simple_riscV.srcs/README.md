@@ -124,9 +124,49 @@ including the main CPU architecture, control logic, register files, and instruct
 [Open full instruction table](docs/instruction_set_table/SRC%20Instructions%20%E2%80%93%20Assembly%20Language%20Format.png)
 
 ---
-          ** Waveform_Output **
+##  RTL Schematic Overview
+
+This section contains the **RTL-level schematics** of the processor,  
+showing the internal structure of each module after synthesis and elaboration in Vivado.
+
 ---
-          ** RTL_Schematic **
+
+###  Top-Level & Core Modules
+
+| Diagram | Description | Preview |
+|----------|--------------|----------|
+| **SRC-top.png** | Top-level RTL schematic connecting all processor modules (CPU core, memory, control unit). | ![SRC Top](docs/RTL_Schematic/SRC-top.png) |
+| **ALU.png** | RTL schematic of the Arithmetic Logic Unit — responsible for arithmetic and logic operations. | ![ALU](docs/RTL_Schematic/ALU.png) |
+| **Condition-Unit.png** | RTL view of the condition evaluation block — computes flags for branching. | ![Condition Unit](docs/RTL_Schematic/Condition-Unit.png) |
+| **General-Purpose-Register-File.png** | Register file schematic showing 32-bit registers and control signals. | ![Register File](docs/RTL_Schematic/General-Purpose-Register-File.png) |
+| **IR.png** | Instruction Register schematic — holds the current instruction being decoded. | ![IR](docs/RTL_Schematic/IR.png) |
+| **Memory-Unit.png** | RTL representation of the memory interface and data paths. | ![Memory Unit](docs/RTL_Schematic/Memory-Unit.png) |
+| **Program-Counter.png** | Schematic of the Program Counter — responsible for sequential instruction flow. | ![Program Counter](docs/RTL_Schematic/Program-Counter.png) |
+| **Shift-Control-Unit.png** | Shift and control logic for timing and instruction step sequencing. | ![Shift Control Unit](docs/RTL_Schematic/Shift-Control-Unit.png) |
+
+---
+
+###  Control Unit Internals
+
+Located inside:  
+`docs/RTL_Schematic/Control-Unit/`
+
+| Diagram | Description | Preview |
+|----------|--------------|----------|
+| **Control-Unit-Wrapper.png** | Top-level wrapper of the control unit connecting submodules. | ![Control Unit Wrapper](docs/RTL_Schematic/Control-Unit/Control-Unit-Wrapper.png) |
+| **Control-Signal-Encoder.png** | Logic for encoding control signals and managing instruction flow. | ![Control Signal Encoder](docs/RTL_Schematic/Control-Unit/Control-Signal-Encoder.png) |
+| **Clock-Logic.png** | RTL schematic of the clock generation and synchronization logic. | ![Clock Logic](docs/RTL_Schematic/Control-Unit/Clock-Logic.png) |
+| **Step-Counter.png** | Counter module used for sequencing control steps and instruction cycles. | ![Step Counter](docs/RTL_Schematic/Control-Unit/Step-Counter.png) |
+
+---
+
+###  Direct Access Links
+
+- [Open SRC Top Schematic](docs/RTL_Schematic/SRC-top.png)
+- [Open Control Unit Wrapper](docs/RTL_Schematic/Control-Unit/Control-Unit-Wrapper.png)
+- [Open ALU Module](docs/RTL_Schematic/ALU.png)
+- [Open Register File](docs/RTL_Schematic/General-Purpose-Register-File.png)
+
 ---
 
 ##  Python Assembler
